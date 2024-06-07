@@ -1,18 +1,17 @@
 package main
 
 import (
-	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
 
-	"github.com/go-kit/kit/log/level"
+	"github.com/alecthomas/kingpin/v2"
+	"github.com/go-kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors/version"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/common/promlog"
 	"github.com/prometheus/common/promlog/flag"
-	"github.com/prometheus/common/version"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 func main() {
@@ -39,7 +38,7 @@ func main() {
 
 func run(listenAddress, metricsPath, fcgiURI, scriptPath, scriptDir string) error {
 	if len(scriptPath) == 0 {
-		file, err := ioutil.TempFile(scriptDir, "opcache.*.php")
+		file, err := os.CreateTemp(scriptDir, "opcache.*.php")
 		if err != nil {
 			return err
 		}

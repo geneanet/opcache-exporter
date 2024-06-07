@@ -3,11 +3,13 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"net/url"
 	"strings"
 	"sync"
+
 	"github.com/prometheus/client_golang/prometheus"
+
+	"io"
 
 	fcgiclient "github.com/tomasen/fcgi_client"
 )
@@ -171,7 +173,7 @@ func (e *Exporter) getOpcacheStatus() (*OPcacheStatus, error) {
 		return nil, err
 	}
 
-	content, err := ioutil.ReadAll(resp.Body)
+	content, err := io.ReadAll(io.Reader(resp.Body))
 	if err != nil {
 		return nil, err
 	}
