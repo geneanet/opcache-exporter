@@ -1,6 +1,6 @@
 # OPcache Exporter for Prometheus
 
-![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/crowdin/opcache-exporter)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/geneanet/opcache-exporter)
 
 This is a simple server that scrapes OPcache status and exports it via HTTP for Prometheus consumption.
 
