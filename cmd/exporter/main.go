@@ -18,7 +18,7 @@ func main() {
 	var (
 		listenAddress = kingpin.Flag("web.listen-address", "Address to listen on for web interface and telemetry.").Default(":9101").String()
 		metricsPath   = kingpin.Flag("web.telemetry-path", "Path under which to expose metrics.").Default("/metrics").String()
-		fcgiURI       = kingpin.Flag("opcache.fcgi-uri", "Connection string to FastCGI server.").Default("tcp://127.0.0.1:9000").String()
+		fcgiURI       = kingpin.Flag("opcache.fcgi-uri", "Connection string to FastCGI server(s). Several URI can be provided, separated by semicolon.").Default("tcp://127.0.0.1:9000").String()
 		scriptPath    = kingpin.Flag("opcache.script-path", "Path to PHP script which echoes json-encoded OPcache status").Default("").String()
 		scriptDir     = kingpin.Flag("opcache.script-dir", "Path to directory where temporary PHP file will be created").Default("").String()
 	)
@@ -57,13 +57,16 @@ func run(listenAddress, metricsPath, fcgiURI, scriptPath, scriptDir string) erro
 		defer os.Remove(file.Name())
 	}
 
-	exporter, err := NewExporter(fcgiURI, scriptPath)
-	if err != nil {
-		return err
-	}
-
-	prometheus.MustRegister(exporter)
 	prometheus.MustRegister(version.NewCollector("opcache_exporter"))
+
+	for _, uri := range strings.Split(fcgiURI, ";") {
+		exporter, err := NewExporter(uri, scriptPath)
+		if err != nil {
+			return err
+		}
+
+		prometheus.MustRegister(exporter)
+	}
 
 	html := strings.Join([]string{
 		`<html>`,
