@@ -19,7 +19,7 @@ const (
 )
 
 func newMetric(metricName, metricDesc string, fcgiURI string) *prometheus.Desc {
-	labels := prometheus.Labels{"fcgi_url": fcgiURI}
+	labels := prometheus.Labels{"fcgi_uri": fcgiURI}
 	return prometheus.NewDesc(prometheus.BuildFQName(namespace, "", metricName), metricDesc, nil, labels)
 }
 
