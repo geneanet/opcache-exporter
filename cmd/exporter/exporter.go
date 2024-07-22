@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"log"
 	"net/url"
 	"strings"
 	"sync"
@@ -149,6 +150,7 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 
 	status, err := e.getOpcacheStatus()
 	if err != nil {
+		log.Print(err)
 		status = new(OPcacheStatus)
 	}
 
